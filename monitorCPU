@@ -1,0 +1,34 @@
+#!/bin/bash
+echo;
+echo "launching top";
+results="";
+value="";
+TRIGGER="5";
+set -e  #### exit on error
+
+launchTop() {
+   results=`top -b -n1 | head -3 | tail -1`;
+}
+
+do_display() {
+   echo "TRIGGER=${TRIGGER}";
+   echo;
+   echo $results;
+}
+
+analyze_cpu() {
+	value=`echo $results | awk '{print $2}' | awk -F. '{print $1}'`;
+	#echo "VALUE=${value}";
+	if [ $value -ge $TRIGGER ]
+	then
+           echo;
+	   echo "CPU EXCEEDS Trigger[${TRIGGER}] USAGE[${value}%]";
+	   echo "CPU EXCEEDS Trigger[${TRIGGER}} USAGE[${value}%]" >> /var/tmp/top.log;
+	   echo "Call Support Team";
+	fi
+}
+
+############# MAIN #########################
+launchTop;
+do_display;
+analyze_cpu;

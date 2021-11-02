@@ -1,0 +1,37 @@
+#!/bin/bash
+echo;
+echo "launching df -k";
+fs="";
+use="";
+TRIGGER="41";
+set -e  #### exit on error
+
+analyze_fileSysUsage() {
+	skipHeader=0;
+	df -k  | while read line
+	do
+             if [ "$skipHeader" == 0 ]
+             then
+		 skipHeader=1;
+		 #echo "SKIP HEADER";
+		 echo "TRIGGER=${TRIGGER}";
+                 echo;
+		 continue;
+	     fi
+
+	     fs=`echo $line | awk '{print $6}'`;
+	     use=`echo $line | awk '{print $5}' | awk -F% '{print $1}'`;
+	     echo "[FS=${fs} - USAGE=${use}%]";
+	     if [ $use -ge $TRIGGER ] 
+	     then
+                echo;
+	        echo "FileSystem[${fs}] - USAGE:[${use}]";
+	        echo "FileSystem[${fs}] - USAGE:[${use}]" >> /var/tmp/df.log;
+	        echo "Call Support Team";
+		echo;
+	     fi
+        done
+}
+
+############# MAIN #########################
+analyze_fileSysUsage;

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+date;
+
+echo "Hello Don - I'm the AWS Linux BOX";

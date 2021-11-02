@@ -1,0 +1,78 @@
+#!/bin/bash
+echo;
+PWD="";
+DATE="";
+WHO="";
+MEMORY="";
+IP="":
+DK="";
+TOP="";
+#set -e;  #### exit on error
+#set -x;
+
+get_pwd() {
+	PWD=$(ssh -i /home/ec2-user/UbuntuKeyFile ubuntu@172.31.36.243 "pwd");
+}
+
+get_date() {
+	DATE=$(ssh -i /home/ec2-user/UbuntuKeyFile ubuntu@172.31.36.243 "date");
+}
+
+get_who() {
+	WHO=$(ssh -i /home/ec2-user/UbuntuKeyFile ubuntu@172.31.36.243 "who");
+}
+
+get_memory() {
+	MEMORY=$(ssh -i /home/ec2-user/UbuntuKeyFile ubuntu@172.31.36.243 "free -h");
+}
+get_machineIP() {
+	IP=$(ssh -i /home/ec2-user/UbuntuKeyFile ubuntu@172.31.36.243 "ifconfig | grep 'broadcast' | awk '{print $2}'");
+}
+get_df() {
+	DK=$(ssh -i /home/ec2-user/UbuntuKeyFile ubuntu@172.31.36.243 "df -k");
+}
+
+get_top() {
+	TOP=$(ssh -i /home/ec2-user/UbuntuKeyFile ubuntu@172.31.36.243 "top -b -n1");
+}
+
+get_ubuntu() {
+	UBUNTU=$(ssh -i /home/ec2-user/UbuntuKeyFile ubuntu@172.31.36.243 "/home/ubuntu/shell_programs/hello_UbuntuLinux");
+}
+do_display() {
+        echo "ORIGINAL BOX[$(uname -n)]"; echo; 
+	echo "RemoteMachine=${WHO}"; echo;
+        echo "RemoteMachinePWD=${PWD}"; echo;
+	echo "RemoteMachineDATE=${DATE}"; echo;
+	echo;
+	echo "RemoteMachineMEMORY="; 
+	echo "${MEMORY}"; echo;
+	echo;
+	echo "RemoteMachinePRIVATE_IP=";
+	echo "${IP}"; echo;
+	echo;
+	echo "RemoteMachineDK=";
+	echo "${DK}"; echo;
+	echo;
+	echo "UBUNTU=";
+	echo "${UBUNTU}"; echo;
+cat << _EOF_
+HERE DOC HELLO!
+_EOF_
+        echo;
+	echo "SHOW TOP OUTPUT IN 15 SECs\n";
+	sleep 15;
+	clear;
+	echo "${TOP}";
+}
+############# MAIN #########################
+get_top;
+get_pwd;
+get_date;
+get_who;
+get_memory;
+get_machineIP;
+get_df;
+get_ubuntu;
+do_display;
+echo;
